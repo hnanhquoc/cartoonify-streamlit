@@ -27,6 +27,19 @@ style = st.selectbox('Please pick an anime you like', ['spirit_away', 'your_name
 
 # Upload file
 uploaded_file = st.file_uploader("Upload Files", type=['png', 'jpeg', 'jpg'])
+
+col1, col2 = st.columns(2)
+
+original = Image.open("1.jpg")
+col1.header("Original")
+col1.image(original, use_column_width=True)
+
+col2.header(f"'{style}' style")
+if style == 'spirit_away':
+    col2.image(Image.open("sa.jpeg"), use_column_width=True)
+else:
+    col2.image(Image.open("yn.jpeg"), use_column_width=True)
+
 if uploaded_file is not None:
     file_details = {"FileName": uploaded_file.name, "FileType": uploaded_file.type, "FileSize": uploaded_file.size}
     image = Image.open(uploaded_file)
