@@ -1,10 +1,12 @@
 import os
-from datetime import time
+import time
 
 import numpy as np
 import streamlit as st
 import tensorflow as tf
 from PIL import Image
+
+MAX_RESOLUTION_SUPPORT = 2048 # 2K
 
 
 def convert(img, model="spirit_away"):
@@ -46,10 +48,23 @@ if uploaded_file is not None:
     file_details = {"FileName": uploaded_file.name, "FileType": uploaded_file.type, "FileSize": uploaded_file.size}
     image = Image.open(uploaded_file)
 
+    # Check image resolution
+    width, height = image.size
+    print(width, height)
+
+    if width > MAX_RESOLUTION_SUPPORT or height > MAX_RESOLUTION_SUPPORT:
+        st.warning('Your image resolution is too large, its size will be cropped...')
+
+    while width > MAX_RESOLUTION_SUPPORT or height > MAX_RESOLUTION_SUPPORT:
+        image = image.resize((int(width/2), int(height/2)))
+        width, height = image.size
+
     # 2 cols: input - output
-    st.image(image, caption=f"Your input: {uploaded_file.name}")
+    st.image(image, caption=f"Your input: {uploaded_file.name}, shape {width}x{height}")
 
     with st.spinner(f":cooking: `Cooking` your image :cooking:"):
+        start = time.time()
         result = convert(image, style)
+        end = time.time()
 
-    st.image(result, caption=f"Your image has turned to `{style}` style.")
+    st.image(result, caption=f"Your image has turned to `{style}` style. Elapsed time: {int(end - start)}s")
