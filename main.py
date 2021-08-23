@@ -1,4 +1,5 @@
 import os
+from datetime import time
 
 import numpy as np
 import streamlit as st
@@ -7,6 +8,7 @@ from PIL import Image
 
 
 def convert(img, model="spirit_away"):
+    st.spinner(text='In progress...')
     imported = tf.saved_model.load(os.path.join("saved_models", model))
     f = imported.signatures["serving_default"]
     img = np.array(img.convert("RGB"))
@@ -45,6 +47,9 @@ if uploaded_file is not None:
     image = Image.open(uploaded_file)
 
     # 2 cols: input - output
-    st.image(image, caption='Sunrise by the mountains')
+    st.image(image, caption=f"Your input: {uploaded_file.name}")
 
-    st.image(convert(image, style), caption="Output")
+    with st.spinner(f":cooking: `Cooking` your image :cooking:"):
+        result = convert(image, style)
+
+    st.image(result, caption=f"Your image has turned to `{style}` style.")
