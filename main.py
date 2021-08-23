@@ -6,7 +6,7 @@ import streamlit as st
 import tensorflow as tf
 from PIL import Image
 
-MAX_RESOLUTION_SUPPORT = 2048 # 2K
+MAX_RESOLUTION_SUPPORT = 1280 # HD
 
 
 def convert(img, model="spirit_away"):
